@@ -1,38 +1,36 @@
 #!/usr/bin/python3
 
+import base64
 import json
-import configparser
 
 BF_ENV = "/etc/bf.env"
 IGNITION_FILE = "/var/lib/hcp/hcp.ign"
 
-env = configparser.ConfigParser()
-env.read(BF_ENV)
-
-env.get('HOSTNAME')
-env.get('KERNEL_PARAMETERS')
-env.get('NVCONFIG_PARAMS')
-env.get('DPF_SF_NUM')
-env.get('DPF_TRUSTED_SFS')
+env = {}
+with open(BF_ENV) as f:
+    for line in f:
+        line = line.strip()
+        if line and '=' in line and not line.startswith('#'):
+            key, value = line.split('=', 1)
+            env[key] = value
 
 ignition = json.load(open(IGNITION_FILE))
 
 ignition['storage']['files'].append({
     'path': '/etc/bf.env',
     'overwrite': True,
-    'mode': 644,
+    'mode': 420,
     'contents': {
-        'source': 'data:,' + open(BF_ENV).read()
+        'source': 'data:text/plain;charset=utf-8;base64,' + base64.b64encode(open(BF_ENV).read().encode()).decode()
     }
 })
 
-# /etc/hostname
 ignition['storage']['files'].append({
     'path': '/etc/hostname',
     'overwrite': True,
-    'mode': 644,
+    'mode': 420,
     'contents': {
-        'inline': env.get('HOSTNAME')
+        'source': 'data:,' + env['HOSTNAME']
     }
 })
 

@@ -1,5 +1,4 @@
 import base64
-from dataclasses import asdict
 from utils.datatypes import FileContents, FileEntry, Flavor, Ignition
 from utils.misc import octal_to_decimal
 

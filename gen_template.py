@@ -35,7 +35,7 @@ def argparse_setup() -> argparse.Namespace:
     parser.add_argument('--output-file', '-f', type=str,
                         default='hcp_template.yaml',)
     # debug ignition file,  boolean
-    parser.add_argument('--debug-ignition', type=bool, default=False,
+    parser.add_argument('--debug-ignition', action='store_true',
                         help='Debug ignition file')
     return parser.parse_args()
 

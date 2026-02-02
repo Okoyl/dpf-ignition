@@ -21,7 +21,7 @@ FILES = [
      600, "oob_net0.nmconnection"),
     ("/etc/crio/crio.conf.d/99-ulimits.conf", 644, "99-ulimits.conf"),
     ("/etc/sysctl.d/98-dpunet.conf", 644, "98-dpunet.conf"),
-    ("/usr/local/bin/dpf-configure-sfs.sh", 644, "dpf-configure-sfs.sh"),
+    ("/usr/local/bin/dpf-configure-sfs.sh", 755, "dpf-configure-sfs.sh"),
     ("/usr/local/bin/set-nvconfig-params.sh", 755, "set-nvconfig-params.sh"),
     ("/etc/sysconfig/openvswitch", 600, "openvswitch"),
 ]
