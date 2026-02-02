@@ -1,0 +1,12 @@
+[Unit]
+Description=Create Scalable Functions on the DPU required for DPF
+After=network.target
+Before=kubelet.service
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/bf.env
+ExecStart=/bin/bash /usr/local/bin/dpf-configure-sfs.sh setup "$DPF_SF_NUM" "$DPF_TRUSTED_SFS"
+
+[Install]
+WantedBy=multi-user.target
