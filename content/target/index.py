@@ -9,6 +9,7 @@ FILES = [
     ("/etc/modules-load.d/br_netfilter.conf", 420, "data:,br_netfilter"),
 
     # Content files
+    ("/usr/local/bin/devlink-activate.sh", 755, "devlink-activate.sh"),
     ("/etc/mellanox/mlnx-bf.conf", 644, "mlnx-bf.conf"),
     ("/etc/mellanox/mlnx-ovs.conf", 644, "mlnx-ovs.conf"),
     ("/etc/NetworkManager/system-connections/pf0vf0.nmconnection",
