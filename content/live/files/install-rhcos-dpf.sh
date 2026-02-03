@@ -7,8 +7,17 @@ log() {
     echo "$msg" >/dev/kmsg
 }
 
-IGNITION_FILE="/var/lib/hcp/hcp.ign"
+IGNITION_FILE="/var/target.ign"
 source /etc/bf.env
+
+default_device=/dev/mmcblk0
+if [ -b /dev/nvme0n1 ]; then
+    default_device="/dev/$(
+        cd /sys/block
+        /bin/ls -1d nvme* | sort -n | tail -1
+    )"
+fi
+device=${device:-"$default_device"}
 
 validate_ignition() {
     if [[ -f "$IGNITION_FILE" ]]; then
@@ -43,26 +52,15 @@ setup_RHCOS_EFI_record() {
         fi
     done
 
-    # Create a new RHCOS EFI record
-    device=${device:-/dev/mmcblk0}
     efibootmgr -c -d "$device" -p 2 -l '\EFI\redhat\shimaa64.efi' -L "Red-Hat CoreOS GRUB"
     log "INFO: Created new RHCOS EFI record."
 }
 
 install_rhcos() {
-    default_device=/dev/mmcblk0
-    if [ -b /dev/nvme0n1 ]; then
-        default_device="/dev/$(
-            cd /sys/block
-            /bin/ls -1d nvme* | sort -n | tail -1
-        )"
-    fi
-    device=${device:-"$default_device"}
-
     log "INFO: Installing Red Hat CoreOS on $device with ignition file $IGNITION_FILE"
 
     coreos-installer install "$device" \
-        --append-karg "console=hvc0 console=ttyAMA0 earlycon=pl011,0x13010000 ignore_loglevel $KERNEL_PARAMETERS" \
+        --append-karg "console=hvc0 console=ttyAMA0 earlycon=pl011,0x13010000 ignore_loglevel modprobe.blacklist=mlxbf_pmc $KERNEL_PARAMETERS" \
         --ignition-file "$IGNITION_FILE" \
         --offline
 
