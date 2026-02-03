@@ -41,11 +41,21 @@ class kernelArguments(TypedDict):
     shouldNotExist: list[str]
 
 
+class PasswdUser(TypedDict):
+    name: str
+    sshAuthorizedKeys: list[str]
+
+
+class Passwd(TypedDict):
+    users: list[PasswdUser]
+
+
 class Ignition(TypedDict):
     ignition: IgnitionConfig
     storage: StorageFiles
     systemd: SystemdUnits
     kernelArguments: kernelArguments
+    passwd: Passwd
 
 ##
 # Flavor

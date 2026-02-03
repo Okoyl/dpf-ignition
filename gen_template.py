@@ -69,11 +69,14 @@ def main():
 
     ign = empty_ignition()
 
+    # Copy target ignition passwd to live ignition
+    ign['passwd'] = target_ignition['passwd'].copy()
+
     add_files(ign, LIVE_CONTENT_DIR)
     add_systemd_units(ign, LIVE_CONTENT_DIR)
 
     ign['storage']['files'].append({
-        'path': '/var/lib/hcp/hcp.ign',
+        'path': '/var/target.ign',
         'contents': {
             "compression": "gzip",
             "source": f"data:;base64,{encoded_ign}"
