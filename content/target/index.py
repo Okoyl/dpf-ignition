@@ -8,6 +8,10 @@ FILES = [
     # Templated/plain source files
     ("/etc/modules-load.d/br_netfilter.conf", 420, "data:,br_netfilter"),
 
+
+    ("/usr/local/bin/bflog.sh", 755, "bflog.sh"),
+    ("/usr/local/bin/bfupsignal.sh", 755, "bfupsignal.sh"),
+
     # Content files
     ("/etc/systemd/network/10-tmfifo_net.link", 644, "10-tmfifo_net.link"),
     ("/usr/local/bin/devlink-activate.sh", 755, "devlink-activate.sh"),

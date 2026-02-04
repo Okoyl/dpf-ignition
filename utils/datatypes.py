@@ -36,7 +36,7 @@ class SystemdUnits(TypedDict):
     units: list[SystemdUnit]
 
 
-class kernelArguments(TypedDict):
+class KernelArguments(TypedDict):
     shouldExist: list[str]
     shouldNotExist: list[str]
 
@@ -54,7 +54,7 @@ class Ignition(TypedDict):
     ignition: IgnitionConfig
     storage: StorageFiles
     systemd: SystemdUnits
-    kernelArguments: kernelArguments
+    kernelArguments: KernelArguments
     passwd: Passwd
 
 ##

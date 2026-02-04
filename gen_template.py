@@ -34,6 +34,8 @@ def argparse_setup() -> argparse.Namespace:
                         help='Namespace for hosted clusters (default: clusters)')
     parser.add_argument('--output-file', '-f', type=str,
                         default='hcp_template.yaml',)
+    parser.add_argument('--password', '-p', type=str,
+                        help='Password for the Live CoreOS "core" user')
     # debug ignition file,  boolean
     parser.add_argument('--debug-ignition', action='store_true',
                         help='Debug ignition file')
@@ -71,6 +73,10 @@ def main():
 
     # Copy target ignition passwd to live ignition
     ign['passwd'] = target_ignition['passwd'].copy()
+
+    if args.password:
+        # Todo: Fix this mess
+        ign['passwd']['users'][0]['passwordHash'] = "$6$3MzVUzfze39iTTNU$ap5btMSiVQMQUbA7ObXMfv9Rdd6947FwphLLTMJuiyZUqDAoCeUOgdbkPZPq0h.1EM2I3ceKBOGC.dnACfZHs."
 
     add_files(ign, LIVE_CONTENT_DIR)
     add_systemd_units(ign, LIVE_CONTENT_DIR)
