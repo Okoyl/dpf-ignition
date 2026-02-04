@@ -1,6 +1,7 @@
 [Unit]
 Description=DPF OVS setup for first boot
 After=network.target
+ConditionPathExists=/etc/mlnx-release
 
 [Service]
 Type=oneshot

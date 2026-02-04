@@ -1,7 +1,7 @@
 import base64
 import gzip
 import json
-from utils.datatypes import Ignition, IgnitionConfig, StorageFiles, SystemdUnits, kernelArguments
+from utils.datatypes import FileContents, FileEntry, Ignition, IgnitionConfig, StorageFiles, SystemdUnits, kernelArguments
 
 
 def empty_ignition(version: str = "3.4.0") -> Ignition:
@@ -35,3 +35,19 @@ def encode_ignition(ign: Ignition) -> str:
     gzipped_ign = gzip.compress(json.dumps(
         ign, separators=(',', ':')).encode('utf-8'))
     return base64.b64encode(gzipped_ign).decode()
+
+
+def encode_gz_compress_file(file: FileContents) -> FileContents:
+
+    # check if binary or text
+
+    # Text
+    if isinstance(file['source'], str):
+        source = file['source'].encode()
+    else:
+        source = file['source']
+
+    return {
+        "compression": "gzip",
+        "source": f"data:;base64,{base64.b64encode(gzip.compress(source)).decode()}"
+    }

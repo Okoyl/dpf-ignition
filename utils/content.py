@@ -2,6 +2,7 @@ import base64
 import importlib
 from pathlib import Path
 from utils.datatypes import FileContents, FileEntry, Ignition, SystemdUnit
+from utils.ignition import encode_gz_compress_file
 from utils.misc import octal_to_decimal
 
 
@@ -29,12 +30,16 @@ def load_files(content_dir: Path) -> list[FileEntry]:
             ))
         else:
             content_path = files_dir / content_source
+
+            content = FileContents(source=content_path.read_bytes())
+
+            encoded_contents: FileContents = encode_gz_compress_file(content)
+
             files.append(FileEntry(
                 path=target_path,
                 overwrite=True,
                 mode=octal_to_decimal(mode),
-                contents=FileContents(source="data:text/plain;charset=utf-8;base64," +
-                                      base64.b64encode(content_path.read_text().encode()).decode())
+                contents=encoded_contents
             ))
 
     return files

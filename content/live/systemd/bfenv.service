@@ -1,5 +1,5 @@
 [Unit]
-Description=Write bf.env configuration file
+Description=set bf.env
 DefaultDependencies=no
 Before=network-pre.target install-rhcos-dpf.service
 

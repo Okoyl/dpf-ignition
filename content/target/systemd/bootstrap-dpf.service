@@ -1,7 +1,8 @@
 [Unit]
-Description=Create Scalable Functions on the DPU required for DPF
+Description=Create SFs for DPF
 After=network.target
 Before=kubelet.service
+ConditionPathExists=/etc/mlnx-release
 
 [Service]
 Type=oneshot

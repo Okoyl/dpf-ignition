@@ -1,6 +1,7 @@
 [Unit]
 Description=Set firmware properties
 After=network.target
+ConditionPathExists=/etc/mlnx-release
 
 [Service]
 Type=oneshot

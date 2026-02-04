@@ -1,5 +1,5 @@
 [Unit]
-Description=Install Red Hat CoreOS
+Description=Install RHCOS
 After=multi-user.target
 ConditionKernelCommandLine=initrd=initramfs
 SuccessExitStatus=0

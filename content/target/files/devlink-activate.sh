@@ -1,6 +1,6 @@
 #!/bin/bash
 
-pcie_dev_list=$(lspci -d 15b3: | grep ConnectX | awk '{print $1}')
+pcie_dev_list=$(lspci -Dd 15b3: | grep ConnectX | awk '{print $1}')
 
 for dev in ${pcie_dev_list}; do
   echo "activate devlink on dev ${dev}"
