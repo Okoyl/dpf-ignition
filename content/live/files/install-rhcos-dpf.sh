@@ -5,6 +5,7 @@ log() {
     msg="[$(date +%H:%M:%S)] $*"
     echo "$msg"
     echo "$msg" >/dev/kmsg
+    /usr/local/bin/bflog.sh "$msg"
 }
 
 IGNITION_FILE="/var/target.ign"
@@ -76,3 +77,13 @@ validate_ignition
 update_ignition
 install_rhcos
 setup_RHCOS_EFI_record
+sync
+
+log "INFO: Installation complete, waiting for 10 seconds before signaling"
+sleep 10
+
+# Hack to skip a reboot after installation
+for i in {1..3}; do
+    /usr/local/bin/bfupsignal.sh
+    sleep 120
+done

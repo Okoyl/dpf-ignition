@@ -1,8 +1,0 @@
-[Match]
-Path=platform-MLNXBF01:00
-Driver=virtio_net
-
-[Link]
-Name=tmfifo_net0
-NamePolicy=
-

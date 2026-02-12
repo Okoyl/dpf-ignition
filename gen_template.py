@@ -17,6 +17,7 @@ from utils.oc import create_bfb_template_cm, get_flavor, pull_ignition
 
 TARGET_CONTENT_DIR = Path(__file__).parent / "content" / "target"
 LIVE_CONTENT_DIR = Path(__file__).parent / "content" / "live"
+COMMON_CONTENT_DIR = Path(__file__).parent / "content" / "common"
 
 
 def argparse_setup() -> argparse.Namespace:
@@ -60,7 +61,9 @@ def main():
     replace_machine_os_url(target_ignition, args.machine_os_url)
 
     add_files(target_ignition, TARGET_CONTENT_DIR)
+    add_files(target_ignition, COMMON_CONTENT_DIR)
     add_systemd_units(target_ignition, TARGET_CONTENT_DIR)
+    add_systemd_units(target_ignition, COMMON_CONTENT_DIR)
     add_flavor_ovs_script(target_ignition, dpu_flavor)
 
     if args.mtu9000:
@@ -79,7 +82,9 @@ def main():
         ign['passwd']['users'][0]['passwordHash'] = "$6$3MzVUzfze39iTTNU$ap5btMSiVQMQUbA7ObXMfv9Rdd6947FwphLLTMJuiyZUqDAoCeUOgdbkPZPq0h.1EM2I3ceKBOGC.dnACfZHs."
 
     add_files(ign, LIVE_CONTENT_DIR)
+    add_files(ign, COMMON_CONTENT_DIR)
     add_systemd_units(ign, LIVE_CONTENT_DIR)
+    add_systemd_units(ign, COMMON_CONTENT_DIR)
 
     ign['storage']['files'].append({
         'path': '/var/target.ign',
