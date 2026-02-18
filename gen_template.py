@@ -40,6 +40,8 @@ def argparse_setup() -> argparse.Namespace:
     # debug ignition file,  boolean
     parser.add_argument('--debug-ignition', action='store_true',
                         help='Debug ignition file')
+    parser.add_argument('--no-ignition-cache', action='store_true',
+                        help='Skip using cached ignition file, always pull from cluster')
     return parser.parse_args()
 
 
@@ -54,7 +56,8 @@ def main():
     print(f"KUBECONFIG: {kubeconfig}")
 
     target_ignition: Ignition = pull_ignition(
-        args.cluster, args.hosted_clusters_namespace)
+        args.cluster, args.hosted_clusters_namespace,
+        use_cache=not args.no_ignition_cache)
 
     dpu_flavor = get_flavor(args.flavor)
 
