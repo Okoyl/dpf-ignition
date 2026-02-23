@@ -4,3 +4,5 @@
 *.yml
 *kubeconfig*
 cache/
+# Ignore directory created by ignition_dump.py
+/ign-root/
