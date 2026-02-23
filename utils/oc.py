@@ -52,19 +52,20 @@ def get_ignition_token_secret(cluster_name: str, namespace: str) -> str:
     return ignition_token
 
 
-def pull_ignition(cluster_name: str, hc_namespace: str) -> dict:
+def pull_ignition(cluster_name: str, hc_namespace: str, use_cache: bool = True) -> dict:
     """
     Pulls the ignition file from the cluster and caches it.
-    If cached file exists, returns cached content instead of pulling.
+    If cached file exists and use_cache is True, returns cached content instead of pulling.
     Args:
         cluster_name: The name of the cluster to pull ignition from
         hc_namespace: The namespace for hosted clusters
+        use_cache: Whether to use cached ignition file (default: True)
     Returns:
         dict: The ignition file content
     """
     # Check cache first
     cache_file = CACHE_DIR / f"{cluster_name}.ign"
-    if cache_file.exists():
+    if use_cache and cache_file.exists():
         print(f"Using cached ignition file: {cache_file}")
         with open(cache_file, "r") as f:
             return json.load(f)
@@ -94,10 +95,13 @@ def pull_ignition(cluster_name: str, hc_namespace: str) -> dict:
         ignition_data = json.loads(data.decode('utf-8'))
 
         # Save to cache
-        CACHE_DIR.mkdir(exist_ok=True)
-        with open(cache_file, "w") as f:
-            json.dump(ignition_data, f)
-        print(f"Downloaded and cached ignition file: {cache_file}")
+        if use_cache:
+            CACHE_DIR.mkdir(exist_ok=True)
+            with open(cache_file, "w") as f:
+                json.dump(ignition_data, f)
+            print(f"Downloaded and cached ignition file: {cache_file}")
+        else:
+            print("Downloaded ignition file (caching disabled).")
 
         return ignition_data
 
