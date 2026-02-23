@@ -3,6 +3,7 @@
 import argparse
 import json
 import os
+import subprocess
 import sys
 import traceback
 from pathlib import Path
@@ -12,7 +13,7 @@ from special.mtu9000 import mtu9000_enable
 from special.ovs_script import add_flavor_ovs_script
 from utils.content import add_files, add_systemd_units
 from utils.datatypes import Ignition
-from utils.ignition import empty_ignition, encode_ignition
+from utils.ignition import empty_ignition, encode_ignition, gzip_ignition_files
 from utils.oc import create_bfb_template_cm, get_flavor, pull_ignition
 
 TARGET_CONTENT_DIR = Path(__file__).parent / "content" / "target"
@@ -70,6 +71,7 @@ def main():
         print("Enabling MTU 9000 configuration.")
         mtu9000_enable(target_ignition)
 
+    gzip_ignition_files(target_ignition)
     encoded_ign = encode_ignition(target_ignition)
 
     ign = empty_ignition()
