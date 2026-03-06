@@ -37,6 +37,36 @@ def encode_ignition(ign: Ignition) -> str:
     return base64.b64encode(gzipped_ign).decode()
 
 
+def gzip_ignition_files(ign: Ignition) -> None:
+    """
+    Gzip-compress all uncompressed files in an ignition's storage.
+    Files that already have compression set are left as-is.
+    """
+    for file_entry in ign.get('storage', {}).get('files', []):
+        contents = file_entry.get('contents', {})
+        if contents.get('compression'):
+            continue
+
+        source = contents.get('source', '')
+        if not source:
+            continue
+
+        # Decode the data URL to raw bytes
+        if source.startswith('data:,'):
+            # URL-encoded inline content
+            from urllib.parse import unquote
+            raw = unquote(source[len('data:,'):]).encode('utf-8')
+        elif ';base64,' in source:
+            # Base64-encoded content (e.g. data:;base64,... or data:text/plain;...;base64,...)
+            b64_data = source.split(';base64,', 1)[1]
+            raw = base64.b64decode(b64_data)
+        else:
+            continue
+
+        contents['compression'] = 'gzip'
+        contents['source'] = f"data:;base64,{base64.b64encode(gzip.compress(raw)).decode()}"
+
+
 def encode_gz_compress_file(file: FileContents) -> FileContents:
     if isinstance(file['source'], str):
         source = file['source'].encode()
